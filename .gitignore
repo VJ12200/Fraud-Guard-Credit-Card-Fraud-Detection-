@@ -1,0 +1,29 @@
+# Dataset — too large and Kaggle ToS
+fraudTrain.csv
+fraudTest.csv
+
+
+*.pkl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+build
+.gradle
+
+# Java / Maven
+target/
+*.class
+*.jar
+
+# IDE
+.idea/
+
+# Environment
+.env
+application-local.properties
+
+#plots
+pr_curve.png
