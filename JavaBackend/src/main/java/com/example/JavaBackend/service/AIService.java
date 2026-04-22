@@ -12,7 +12,7 @@ import java.util.Map;
 public class AIService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String AI_URL = "http:
+    private static final String AI_URL = "http://localhost:8000/anomaly";
 
     public boolean isAnomalous(FinancialTransaction txn,
                                Map<String, Object> features) {
