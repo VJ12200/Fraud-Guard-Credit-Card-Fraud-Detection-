@@ -457,7 +457,7 @@ All violations are scored and added , with 100 being the limit.
 | Graph Cycle Fraud | +70 |
 | High Frequency Rule | +30 |
 | AI Anomaly Detection | +60 |
-| Amount > $2,000,000 | +10 bonus |
+| Amount > 2,000,000 | +10 bonus |
 | **Maximum** | **100** |
 
 ---
