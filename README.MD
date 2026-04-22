@@ -58,7 +58,7 @@ Transactions can be submitted as a **single object or a JSON array** through the
 | Fraud rate | 0.58% (class imbalance handled with SMOTE) |
 
 
-### PR Curve
+### Evaluation Plots
 
 ![PR Curve](results/pr_curve.png)
 
@@ -130,34 +130,30 @@ Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomal
 - **Graph Cycle Detection** — builds a directed transaction graph and runs DFS from every node to detect money laundering (A→B→C→A pattern)
 
 ### ML Model
-- XGBoost classifier trained on 1.85M synthetic transactions
+- XGBoost classifier trained on 1.85M transactions
 - Hyperparameters tuned via Optuna (50 trials, TPE sampler, maximising PR-AUC)
 - SMOTE oversampling on training fold only to handle 0.58% fraud rate
 - `scale_pos_weight` set to neg/pos ratio as additional imbalance correction
-- Threshold tuned post-training via precision-recall curve analysis
+- Threshold tuned post-training from precision-recall curve analysis
 
 ### Feature Engineering (computed at inference, no user input required)
 | Feature | Description |
 |---|---|
 | `hour` | Hour of day extracted from transaction timestamp |
 | `time_since_last_txn` | Seconds since same card's previous transaction |
-| `txn_count_per_card_day` | Number of transactions this card made today |
+| `txn_count_per_card_day` | Number of transactions made from this card today |
 | `amt_vs_card_mean` | Signed deviation from this card's historical average spend |
 | `amt_vs_card_std` | Z-score-like ratio against card's spend standard deviation |
 | `geo_distance` | Euclidean distance between cardholder and merchant location |
 
 ### API Design
-- Single endpoint accepts both `{...}` and `[{...}, {...}]` — no separate batch route
+- Single endpoint accepts both `{...}`(Single Transaction) and `[{...}, {...}]`(Btach Transactions) 
 - Jackson `readTree` parsing handles type detection at runtime
-- Per-transaction try/catch in batch processing — one failure never crashes others
-- `@JsonIgnoreProperties(ignoreUnknown = true)` on model prevents unknown field errors
+- Per-transaction try/catch in batch processing — for error handling
+- `@JsonIgnoreProperties(ignoreUnknown = true)` to prevent field errors
 
 ### UI
-- Thymeleaf frontend with dark terminal aesthetic
-- Single and batch transaction modes with toggle
-- Category dropdown with all 13 dataset categories
-- Auto-computed feature note shown to users
-- Colour-coded results (green OK, red FLAGGED, yellow FAILED)
+- Simple thymeleaf page that accepts both single and batch transactions  
 
 ---
 
@@ -165,8 +161,8 @@ Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomal
 
 | Component | Technology |
 |---|---|
-| REST API | Java 17, Spring Boot 3.x |
-| Persistence | Spring Data JPA, H2 (default) / PostgreSQL |
+| REST API | Java , Spring Boot , Python |
+| DB | PostgreSQL |
 | UI | Thymeleaf, HTML/CSS/JS |
 | ML Model | XGBoost |
 | Preprocessing | scikit-learn, pandas, numpy |
@@ -221,7 +217,7 @@ fraudguard/
 │   └── models/                             pkl files saved here (gitignored)
 │
 ├── data/
-│   └── README.md                           Dataset download instructions
+│   └── README.md                           
 │
 ├── results/
 │   └── pr_curve.png                        Evaluation plots
@@ -249,8 +245,7 @@ cd fraudguard
 
 ### 2. Download the dataset
 
-See [data/README.md](data/README.md) for instructions.
-Place `fraudTrain.csv` in the `data/` directory.
+https://www.kaggle.com/datasets/kartik2112/fraud-detection
 
 ### 3. Set up Python environment
 
@@ -261,12 +256,11 @@ pip install -r requirements.txt
 ### 4. Train the ML model
 
 ```bash
-cd python
 
-# Run once — finds best hyperparameters via Optuna (~30–60 mins)
+# Run once — finds best hyperparameters via Optuna (Takes a few minutes)
 python tune.py
 
-# Fast retraining using saved params (~5 mins)
+# Fast retraining using saved params 
 python train.py
 
 # Evaluate model and save decision threshold
@@ -280,17 +274,6 @@ cd python
 uvicorn app:app --reload --port 8000
 ```
 
-Verify: `http://localhost:8000/health`
-
-Expected response:
-```json
-{
-  "status": "ok",
-  "features_expected": 15,
-  "threshold": 0.6856
-}
-```
-
 ### 6. Configure Spring Boot
 
 ```bash
@@ -299,20 +282,16 @@ cp src/main/resources/application.properties.example \
    src/main/resources/application.properties
 ```
 
-Edit `application.properties` with your database settings if not using H2.
+Edit `application.properties` with your DB Settings (Username , Pass , Timezone).The springboot startup port was set to 8081 , it can be changed from application.properties.
 
 ### 7. Start Spring Boot
-
-```bash
-cd java
-mvn spring-boot:run
-```
 
 ### 8. Open the UI
 
 ```
 http://localhost:8081/ui
 ```
+This is the UI page , it makes it difficult to enter repeated single transactions for test cases , use Postman instead. 
 
 ---
 
@@ -320,7 +299,7 @@ http://localhost:8081/ui
 
 ### `POST /transactions`
 
-Unified endpoint — accepts both a single transaction object and a JSON array.
+Accepts both single and batch transaction(Use JSON Array)
 
 **Single transaction:**
 ```bash
@@ -363,17 +342,17 @@ curl -X POST http://localhost:8081/transactions \
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `senderId` | String | ✅ | Card or user identifier |
-| `receiverId` | String | ✅ | Merchant identifier |
-| `amount` | Double | ✅ | Transaction amount (must be > 0) |
-| `category` | String | ❌ | Merchant category (default: `misc_net`) |
-| `gender` | String | ❌ | `M` or `F` (default: `M`) |
-| `age` | Integer | ❌ | Cardholder age |
-| `cityPop` | Integer | ❌ | Population of cardholder's city |
-| `lat` / `lon` | Double | ❌ | Cardholder coordinates |
-| `merchLat` / `merchLong` | Double | ❌ | Merchant coordinates |
+| `senderId` | String | YES | Card or user identifier |
+| `receiverId` | String | YES | Merchant identifier |
+| `amount` | Double | YES | Transaction amount (must be > 0) |
+| `category` | String | NO | Merchant category (default: `misc_net`) |
+| `gender` | String | NO | `M` or `F` (default: `M`) |
+| `age` | Integer | NO | Cardholder age |
+| `cityPop` | Integer | NO | Population of cardholder's city |
+| `lat` / `lon` | Double | NO | Cardholder coordinates |
+| `merchLat` / `merchLong` | Double | NO | Merchant coordinates |
 
-### Supported Categories
+### Supported Categories for transaction type 
 
 `grocery_pos` · `grocery_net` · `shopping_pos` · `shopping_net` · `gas_transport` · `entertainment` · `food_dining` · `health_fitness` · `travel` · `home` · `kids_pets` · `personal_care` · `misc_net`
 
@@ -393,16 +372,6 @@ Returns all alerts generated for a specific transaction.
 ]
 ```
 
-### `GET /health` (Python API)
-
-```json
-{
-  "status": "ok",
-  "features_expected": 15,
-  "threshold": 0.6856
-}
-```
-
 ---
 
 ## ML Pipeline
@@ -411,22 +380,14 @@ Returns all alerts generated for a specific transaction.
 
 | File | Purpose | When to run |
 |---|---|---|
-| `preprocess.py` | Feature engineering, label encoding | Called by other scripts |
-| `tune.py` | Optuna hyperparameter search | **Once only** — saves `best_params.pkl` |
-| `train.py` | Fast retraining with saved params | Any time you retrain |
-| `evaluate.py` | Metrics, threshold selection, plots | After every training run |
-| `app.py` | FastAPI inference server | Keep running alongside Spring Boot |
+| `preprocess.py` | Feature engineering, labels | Called by other scripts |
+| `tune.py` | Optuna hyperparameter search | **Is run only once** — saves `best_params.pkl` |
+| `train.py` | Fast retraining using saved params |
+| `evaluate.py` | Metrics, threshold selection, plots | Generates the evaluation plots |
+| `app.py` | FastAPI server | Comunicates with Spring Boot , The python layer won't run if it isn't running |
 
-### When to re-run `tune.py`
 
-| Situation | Re-tune? |
-|---|---|
-| Routine retraining on same data | ❌ Use `train.py` |
-| Added new features | ✅ Yes |
-| Switched dataset | ✅ Yes |
-| PR-AUC dropped significantly | ✅ Yes |
-
-### Feature Vector (sent from Java → Python)
+### Feature vector sent from Java to Python
 
 ```
 amt, city_pop, age, hour, lat, long, merch_lat, merch_long,
@@ -434,9 +395,7 @@ category_enc, gender_enc, time_since_last_txn,
 txn_count_per_card_day, amt_vs_card_mean, amt_vs_card_std, geo_distance
 ```
 
-All behavioural features (`time_since_last_txn`, `txn_count_per_card_day`, `amt_vs_card_mean`, `amt_vs_card_std`, `geo_distance`) are computed at runtime by `FeatureService.java` from live DB queries — no user input needed.
-
-### Top 10 Feature Importances (LightGBM reference run)
+### Feature Importances (LightGBM reference run)
 
 | Feature | Importance |
 |---|---|
@@ -465,22 +424,22 @@ public interface Rule {
 ```
 
 ### HighAmountRule
-Fires when `amount > 1,000,000`. Straightforward threshold check.
+Triggers when `amount > 1,000,000`.
 
 ### StructuringRule
-Queries all transactions from the same sender in the last hour (excluding current), sums their amounts. Fires when cumulative total exceeds $1,000,000. Detects the common money laundering technique of splitting large transfers into smaller amounts below reporting thresholds.
+Queries all transactions from the same sender in the last hour then sums their amounts. Triggers when cumulative total exceeds 1,000,000. Detects the common money laundering technique of splitting large transfers into smaller amounts below limits.
 
 ### FrequencyRule
-Queries transactions from the same sender in the last hour. Fires when count ≥ 10. Detects card testing and rapid-fire fraud attacks.
+Queries transactions from the same sender in the last hour. Fires when count ≥ 10. Detects card testing.
 
 ### Graph Cycle Detection
-`GraphService` builds a directed graph where each edge represents a transaction (sender → receiver). `CycleDetection` runs DFS from each sender node. If a path returns to the origin through 3+ nodes, a money laundering ring is detected. Graph is cached with a 5-minute TTL and invalidated after each batch save.
+`GraphService` builds a directed graph where each edge represents a transaction (sender → receiver). `CycleDetection` runs DFS from each sender node. If a path returns to the origin through 3+ nodes, money laundering is detected.
 
 ---
 
 ## Risk Scoring
 
-All violations are scored and summed, capped at 100.
+All violations are scored and added , with 100 being the limit.
 
 | Rule | Score |
 |---|---|
@@ -498,43 +457,14 @@ All violations are scored and summed, capped at 100.
 
 Available at `http://localhost:8081/ui`
 
-**Single mode** — form fields for all transaction properties including optional location coordinates and cardholder profile. Behavioural features are computed automatically.
+**Single mode** — form fields for all transaction properties.
 
-**Batch mode** — paste a raw JSON array directly. Required fields: `senderId`, `receiverId`, `amount`. All other fields optional.
+**Batch mode** — for Batch transactions using JSON arrays. Required fields: `senderId`, `receiverId`, `amount`.
 
-Results are colour-coded:
-- 🟢 Green — Transaction OK
-- 🔴 Red — FLAGGED (with risk score and violated rules)
-- 🟡 Yellow — FAILED (processing error, batch continues)
-
----
-
-## Test Cases
-
-### Clean transaction
-```json
-{"senderId":"card_clean","receiverId":"merchant_groceries","amount":42.50,"category":"grocery_pos","gender":"M","age":28}
-```
-Expected: `Transaction OK`
-
-### High Amount Rule
-```json
-{"senderId":"card_01","receiverId":"merchant_wire","amount":1500000,"category":"misc_net","gender":"M","age":45}
-```
-Expected: `FLAGGED | Risk: 50 | High Amount Rule`
-
-### Graph Cycle (send as one batch)
-```json
-[
-  {"senderId":"node_A","receiverId":"node_B","amount":1000,"category":"misc_net","gender":"M","age":35},
-  {"senderId":"node_B","receiverId":"node_C","amount":1000,"category":"misc_net","gender":"M","age":35},
-  {"senderId":"node_C","receiverId":"node_A","amount":1000,"category":"misc_net","gender":"M","age":35}
-]
-```
-Expected: `FLAGGED | Risk: 70 | Graph Cycle Fraud`
-
-### Maximum risk (all rules)
-Send 11 transactions from same sender in rapid succession, with amount > $1M and an existing cycle. Expected: `FLAGGED | Risk: 100`
+Results:
+- Green — Transaction OK
+- Red — FLAGGED (with risk score and violated rules)
+- Yellow — FAILED (processing error, batch continues)
 
 ---
 
