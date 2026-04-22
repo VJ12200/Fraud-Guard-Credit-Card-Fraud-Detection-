@@ -119,24 +119,15 @@ AlertRepository     →  persisted to DB
 Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomaly Detection"
 ```
 
-### Graceful Degradation
-
-```
-Python service DOWN  →  AIService catches ResourceAccessException
-                     →  logs warning, returns false
-                     →  rule engine result returned normally
-                     →  system never crashes
-```
-
 ---
 
 ## Features
 
 ### Rule Engine
-- **High Amount Rule** — flags any single transaction exceeding $1,000,000
-- **Structuring Rule** — monitors cumulative spend per sender over a rolling 1-hour window; flags when total exceeds $1,000,000 (detects split-transaction laundering)
+- **High Amount Rule** — flags single transactions exceeding $1,000,000
+- **Structuring Rule** — monitors total amount sent over a 1-hour window; flags when total exceeds $1,000,000 (detects split-transaction laundering)
 - **Frequency Rule** — flags senders with more than 10 transactions in the last hour
-- **Graph Cycle Detection** — builds a directed transaction graph and runs DFS from every node to detect money laundering rings (A→B→C→A patterns)
+- **Graph Cycle Detection** — builds a directed transaction graph and runs DFS from every node to detect money laundering (A→B→C→A pattern)
 
 ### ML Model
 - XGBoost classifier trained on 1.85M synthetic transactions
