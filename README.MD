@@ -122,8 +122,8 @@ Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomal
 ## Features
 
 ### Rule Engine
-- **High Amount Rule** — flags single transactions exceeding $1,000,000
-- **Structuring Rule** — monitors total amount sent over a 1-hour window; flags when total exceeds $1,000,000 (detects split-transaction laundering)
+- **High Amount Rule** — flags single transactions exceeding 1,000,000
+- **Structuring Rule** — monitors total amount sent over a 1-hour window; flags when total exceeds 1,000,000 (detects split-transaction laundering)
 - **Frequency Rule** — flags senders with more than 10 transactions in the last hour
 - **Graph Cycle Detection** — builds a directed transaction graph and runs DFS from every node to detect money laundering (A→B→C→A pattern)
 
