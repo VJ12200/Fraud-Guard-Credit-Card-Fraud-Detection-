@@ -20,7 +20,6 @@
 - [Architecture](#architecture)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
 - [Quick Start](#quick-start)
 - [API Reference](#api-reference)
 - [ML Pipeline](#ml-pipeline)
@@ -179,61 +178,6 @@ Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomal
 | Inference API | FastAPI, Pydantic, Uvicorn |
 | Model Serialisation | joblib |
 | Visualisation | matplotlib |
-
----
-
-## Project Structure
-
-```
-fraudguard/
-├── java/                                   Spring Boot application
-│   ├── src/main/java/com/example/fintechcompliance/
-│   │   ├── controller/
-│   │   │   ├── TransactionController.java  Unified single/batch endpoint
-│   │   │   └── ViewController.java         Thymeleaf form handler
-│   │   ├── model/
-│   │   │   ├── FinancialTransaction.java
-│   │   │   └── FinancialAlert.java
-│   │   ├── repository/
-│   │   │   ├── TransactionRepository.java
-│   │   │   └── AlertRepository.java
-│   │   ├── ruleengine/
-│   │   │   ├── Rule.java                   Interface
-│   │   │   ├── RuleEngine.java             Spring-managed bean, autowires List<Rule>
-│   │   │   ├── HighAmountRule.java
-│   │   │   ├── FrequencyRule.java
-│   │   │   └── StructuringRule.java
-│   │   └── service/
-│   │       ├── AIService.java              HTTP client to Python API
-│   │       ├── CycleDetection.java         DFS graph traversal
-│   │       ├── ExplanationService.java
-│   │       ├── FeatureService.java         Runtime feature engineering
-│   │       ├── GraphService.java           Transaction graph + TTL cache
-│   │       ├── RiskScoringService.java     Weighted score aggregation
-│   │       └── TransactionService.java     Orchestration
-│   ├── src/main/resources/
-│   │   ├── templates/UI.html
-│   │   └── application.properties.example
-│   └── pom.xml
-│
-├── python/                                 ML pipeline
-│   ├── preprocess.py                       Feature engineering + encoders
-│   ├── tune.py                             Optuna hyperparameter search (run once)
-│   ├── train.py                            Fast retraining using saved params
-│   ├── evaluate.py                         Metrics, threshold tuning, plots
-│   ├── app.py                              FastAPI inference server
-│   └── models/                             pkl files saved here (gitignored)
-│
-├── data/
-│   └── README.md                           
-│
-├── results/
-│   └── pr_curve.png                        Evaluation plots
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
 
 ---
 
