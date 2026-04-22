@@ -85,18 +85,18 @@ Browser / Postman
 POST /transactions              Spring Boot :8081
       │
       ├─── TransactionController
-      │         │  (unified endpoint — single or batch JSON)
+      │         │  (Endpoint — single or batch JSON)
       │         ▼
       │    TransactionService
       │         │
-      │         ├── RuleEngine ──────────────────────────────────┐
-      │         │     ├── HighAmountRule   (amount > 1,000,000)  │
-      │         │     ├── StructuringRule  (cumulative > 1M/hr)  │  Java
-      │         │     ├── FrequencyRule    (> 10 txns/hr)        │
-      │         │     └── GraphCycleRule   (DFS cycle detection)  │
-      │         │                                                 │
-      │         ├── FeatureService  (5 behavioural features)     │
-      │         │                                                 │
+      │         ├── RuleEngine ─────────────────────────────────┐
+      │         │     ├── HighAmountRule                        │
+      │         │     ├── StructuringRule                       │   
+      │         │     ├── FrequencyRule                         │
+      │         │     └── GraphCycleRule                        │
+      │         │                                               │
+      │         ├── FeatureService  (5  features)               │         
+      │         │                                               │
       │         └── AIService ──────────────────────────────────┘
       │                   │
       │                   │  HTTP POST
