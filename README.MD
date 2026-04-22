@@ -9,7 +9,7 @@
 ![XGBoost](https://img.shields.io/badge/XGBoost-ML-red?style=flat-square)
 ![Optuna](https://img.shields.io/badge/Optuna-Tuned-purple?style=flat-square)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-UI-005F0F?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
 
 ---
 
