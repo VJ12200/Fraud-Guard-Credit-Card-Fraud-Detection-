@@ -1,19 +1,17 @@
-# Dataset — too large and Kaggle ToS
+# Dataset
 fraudTrain.csv
 fraudTest.csv
 
 
 *.pkl
 
-# Python
+# Python/Java
 __pycache__/
 *.pyc
 .venv/
 venv/
 build
 .gradle
-
-# Java / Maven
 target/
 *.class
 *.jar
