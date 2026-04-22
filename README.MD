@@ -549,5 +549,4 @@ Send 11 transactions from same sender in rapid succession, with amount > $1M and
 ## Acknowledgements
 
 - Dataset: [Credit Card Transactions Fraud Detection Dataset](https://www.kaggle.com/datasets/kartik2112/fraud-detection) by Kartik Shenoy — CC0 Public Domain
-- Synthetic data generated using the [Sparknov](https://github.com/namebrandon/Sparknov) tool
-- Optuna hyperparameter optimisation framework by Preferred Networks
+
