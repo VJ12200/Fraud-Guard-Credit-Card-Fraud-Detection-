@@ -36,12 +36,12 @@
 
 FraudGuard is a full-stack fraud detection system that processes credit card transactions through two independent layers:
 
-1. **Rule Engine (Java)** — deterministic AML compliance rules that fire instantly with no ML dependency
-2. **ML Model (Python)** — XGBoost classifier trained on 1.85M synthetic transactions with 15 engineered features, served via FastAPI
+1. **Rule Engine (Java)** — Acts as the first layer that contains hardcoded rules that check for fraud 
+2. **ML Model (Python)** — XGBoost classifier trained on 1.85M transactions with 15 engineered features, served via FastAPI
 
-Both layers run on every transaction. If the Python service is unavailable, the rule engine continues operating independently — the system never goes fully down.
+Both layers run on every transaction. If the Python service is unavailable, the rule engine continues operating independently — the system never crashes.
 
-Transactions can be submitted as a **single object or a JSON array** through the same endpoint, and are evaluated for high-amount violations, structuring, frequency bursts, graph-based money laundering cycles, and ML-detected anomalies simultaneously.
+Transactions can be submitted as a **single object or a JSON array** through the same endpoint, and are evaluated for high-amount violations, structuring, improper frequency, graph-based money laundering cycles, and ML-detected anomalies simultaneously.
 
 ---
 
