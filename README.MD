@@ -26,8 +26,6 @@
 - [ML Pipeline](#ml-pipeline)
 - [Rule Engine](#rule-engine)
 - [Risk Scoring](#risk-scoring)
-- [UI](#ui)
-- [Test Cases](#test-cases)
 - [Acknowledgements](#acknowledgements)
 
 ---
@@ -154,6 +152,16 @@ Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomal
 
 ### UI
 - Simple thymeleaf page that accepts both single and batch transactions  
+- Single mode — form fields for all transaction properties.
+- Batch mode — for Batch transactions using JSON arrays. Required fields: senderId, receiverId, amount.
+
+- Results:
+
+    Green — Transaction OK
+    Red — FLAGGED (with risk score and violated rules)
+    Yellow — FAILED (processing error, batch continues)
+
+
 
 ---
 
@@ -453,20 +461,6 @@ All violations are scored and added , with 100 being the limit.
 
 ---
 
-## UI
-
-Available at `http://localhost:8081/ui`
-
-**Single mode** — form fields for all transaction properties.
-
-**Batch mode** — for Batch transactions using JSON arrays. Required fields: `senderId`, `receiverId`, `amount`.
-
-Results:
-- Green — Transaction OK
-- Red — FLAGGED (with risk score and violated rules)
-- Yellow — FAILED (processing error, batch continues)
-
----
 
 ## Acknowledgements
 
