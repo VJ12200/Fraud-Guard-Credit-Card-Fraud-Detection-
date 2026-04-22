@@ -290,16 +290,17 @@ cp src/main/resources/application.properties.example \
    src/main/resources/application.properties
 ```
 
-Edit `application.properties` with your DB Settings (Username , Pass , Timezone).The springboot startup port was set to 8081 , it can be changed from application.properties.
+Edit `application.properties` with your DB Settings (Username , Pass , Timezone). The springboot startup port was set to 8081 , it can be changed from application.properties.
 
 ### 7. Start Spring Boot
+
 
 ### 8. Open the UI
 
 ```
 http://localhost:8081/ui
 ```
-This is the UI page , it makes it difficult to enter repeated single transactions for test cases , use Postman instead. 
+The UI page makes it difficult to enter repeated single transactions for test cases , use Postman instead. 
 
 ---
 
