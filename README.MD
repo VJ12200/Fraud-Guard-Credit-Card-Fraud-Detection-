@@ -62,7 +62,8 @@ Transactions can be submitted as a **single object or a JSON array** through the
 
 ![PR Curve](results/pr_curve.png)
 
-The curve stays near 1.0 precision until ~0.95 recall before dropping — a strong model signature. The wide flat F1 plateau (threshold 0.05–0.90) indicates robustness to threshold changes in production.
+
+
 
 ### Threshold Tradeoff
 
