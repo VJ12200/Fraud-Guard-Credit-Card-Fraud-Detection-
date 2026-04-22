@@ -238,7 +238,7 @@ Edit `application.properties` with your DB Settings (Username , Pass , Timezone)
 
 ### 7. Start Spring Boot
 
--NOTE - Springboot uses "http://localhost:8000/anomaly"(FASTAPI server endpoint) to communicate with Python , if it's changed eneter the new server endpoint in AIService.java - 
+NOTE - Springboot uses "http://localhost:8000/anomaly"(FASTAPI server endpoint) to communicate with Python , if it's changed eneter the new server endpoint in AIService.java - 
 ```
       private static final String AI_URL = "{New Endpoint}";
 ```
