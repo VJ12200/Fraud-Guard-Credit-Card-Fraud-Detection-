@@ -158,8 +158,8 @@ Response  →  "FLAGGED | Risk: 80 | 2 violation(s): High Amount Rule, AI Anomal
 - Results:
 
     -  Green — Transaction OK
-    - Red — FLAGGED (with risk score and violated rules)
-    - Yellow — FAILED (processing error, batch continues)
+    - Red — FLAGGED (Shows risk score and violated rules)
+    - Yellow — FAILED 
 
 
 
