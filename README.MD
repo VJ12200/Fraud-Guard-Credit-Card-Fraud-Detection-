@@ -56,7 +56,7 @@ Transactions can be submitted as a **single object or a JSON array** through the
 | False Alarms | 72 on 257,834 legitimate transactions |
 | Training samples | 1,852,394 transactions |
 | Fraud rate | 0.58% (class imbalance handled with SMOTE) |
-| Baseline (random) | PR-AUC 0.0058 — model is **167x better** |
+
 
 ### PR Curve
 
