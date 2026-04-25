@@ -6,6 +6,7 @@
 ![SpringBoot](https://img.shields.io/badge/SpringBoot-3.x-brightgreen?style=flat-square&logo=springboot)
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square&logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Enabled-009688?style=flat-square&logo=fastapi)
+![Streamlit](https://img.shields.io/badge/Streamlit-UI-red)
 ![XGBoost](https://img.shields.io/badge/XGBoost-ML-red?style=flat-square)
 ![Optuna](https://img.shields.io/badge/Optuna-Tuned-purple?style=flat-square)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-UI-005F0F?style=flat-square)
